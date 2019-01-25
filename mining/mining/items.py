@@ -30,7 +30,6 @@ class Litigation(scrapy.Item):
     respondents = scrapy.Field(
         input_processor=MapCompose(remove_tags, filter_respondents),
         # output_processor=Join()
-
     )
     title = scrapy.Field()
     subtitle = scrapy.Field()

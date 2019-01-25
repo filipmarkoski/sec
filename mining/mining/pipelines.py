@@ -5,13 +5,31 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from litigations.models import Litigation, Reference
-import datetime
-import time
+from datetime import datetime
+
+
+def try_parsing_date(text):
+    for fmt in ("%b. %d, %Y", "%b %d, %Y"):
+        try:
+            return datetime.strptime(text, fmt)
+        except ValueError:
+            pass
+    raise ValueError('no valid date format found')
 
 
 class MiningPipeline(object):
 
     def process_item(self, item, spider):
+        # print(item)
+        release_no, date, respondents = item["row"]
+
+        litigation = Litigation()
+        litigation.release_no = release_no
+        litigation.date = try_parsing_date(date).date()
+        litigation.respondents = respondents
+        litigation.save()
+
+        # print(litigation)
         # print("Django Length:")
         # print(len(item['release_no']))
         # print(len(item['date']))
@@ -43,5 +61,3 @@ class MiningPipeline(object):
         # litigation.date = datetime.datetime.strptime(item["date"][i], "%b. %d, %Y").date()
         # litigation.respondents = item["respondents"][i]
         # print("{} - {}".format(i, litigation))
-        item.save()
-        return item
