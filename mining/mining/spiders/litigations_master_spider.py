@@ -15,7 +15,7 @@ class LitigationsMasterSpider(scrapy.Spider):
 
         '''for year in range(1995, 2018 + 1):
             urls.append("https://www.sec.gov/litigation/litreleases/litrelarchive/litarchive{year}.shtml".format(year=year))
-'''
+        '''
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
 
@@ -33,5 +33,9 @@ class LitigationsMasterSpider(scrapy.Spider):
 
         for row in zip(rels, dates, resps):
             yield {"row": row}
+
+        # item_loader = ItemLoader(item=Reference(), response=response)
+        # item_loader.add_xpath('reference', '//tr[count(@id = 0)]')
+        # item_loader.add_xpath('reference_text')
 
         return

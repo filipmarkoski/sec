@@ -6,10 +6,10 @@ from django.db import models
 class Litigation(models.Model):
     release_no = models.CharField(max_length=25, unique=True)
     date = models.DateField(blank=True, null=True)
-    respondents = models.CharField(max_length=256)
-    title = models.CharField(max_length=256)
-    subtitle = models.CharField(max_length=256)
-    contents = models.TextField()
+    respondents = models.CharField(max_length=1024)
+    title = models.CharField(max_length=1024)
+    subtitle = models.CharField(max_length=1024)
+    content = models.TextField()
 
     def __str__(self):
         return "{release_no} - {date} - {respondents}".format(release_no=self.release_no,
