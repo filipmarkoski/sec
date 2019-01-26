@@ -26,7 +26,9 @@ def filter_respondents(value):
 
 class Litigation(scrapy.Item):
     release_no = scrapy.Field()
-    date = scrapy.Field()
+    date = scrapy.Field(
+        input_processor=MapCompose(remove_tags)
+    )
     respondents = scrapy.Field(
         input_processor=MapCompose(remove_tags, filter_respondents),
         # output_processor=Join()

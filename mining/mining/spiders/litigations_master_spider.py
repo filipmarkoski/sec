@@ -21,11 +21,15 @@ class LitigationsMasterSpider(scrapy.Spider):
 
     def parse(self, response):
         item_loader = ItemLoader(item=Litigation(), response=response)
-        item_loader.add_xpath('release_no', '//tr[count(@id) = 0]/td[1]/a/text()')
-        item_loader.add_xpath('date', '//tr[count(@id) = 0]/td[2]/text()')
+        item_loader.add_xpath('release_no', '//tr[count(@id) = 0]/td[1]/a/text() | //tr[count(@id) = 0]/td[1]/text()')
+        item_loader.add_xpath('date', '//tr[count(@id) = 0]/td[2]')
         item_loader.add_xpath('respondents', '//tr[count(@id) = 0]/td[3]')
 
         rels, dates, resps = item_loader.load_item().values()
+
+        # print(len(rels))
+        # print(len(dates))
+        # print(len(resps))
 
         for row in zip(rels, dates, resps):
             yield {"row": row}
