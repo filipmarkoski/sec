@@ -6,6 +6,7 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from litigations.models import Litigation, Reference
 from datetime import datetime
+from w3lib.html import remove_tags
 
 
 def try_parsing_date(text):
@@ -36,20 +37,14 @@ class MiningPipeline(object):
             # litigation.save()
 
         elif spider.name == "detail":
-            print(type(item))
+            print()
+            print("-----------------")
+            print()
             print(item)
 
-            # print("ITEM NUMBER {0}:\n\t Title: {1}\n\t Subtitle: {2}\n\t Content: {3} \n\tReferences: "
-            #       .format(self.count, item['title'], item['subtitle'], item['content']))
-            # self.count += 1
-            # if len(item['references_names']) != 0:
-            #     print("\tFROM CONTENT:")
-            #     for i in range(0, len(item['references_names'])):
-            #         print("\tname: {0} url: {1}".format(item['references_names'][i], item['references_urls'][i]))
-            # if len(item['references_sidebar_names']) != 0:
-            #     print("\tFROM SIDEBAR:")
-            #     for i in range(0, len(item['references_sidebar_names'])):
-            #         print("\tname: {0} url: {1}".format(item['references_sidebar_names'][i],
-            #                                             item['references_sidebar_urls'][i]))
-
-
+            # litigation = Litigation()
+            # litigation.release_no = item["release_no"]
+            # litigation.date = item["date"]
+            # litigation.respondents = item["respondents"]
+            # litigation.content = item["content"]
+            # litigation.save()

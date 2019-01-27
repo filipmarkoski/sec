@@ -88,7 +88,8 @@ ITEM_PIPELINES = {
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-FEED_EXPORT_ENCODING = "utf-8"
+# We added this, but it doesn't do anything
+# FEED_EXPORT_ENCODING = "utf-8"
 
 import os
 import sys

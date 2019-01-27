@@ -1,7 +1,9 @@
+import os
 import scrapy
 from scrapy.loader import ItemLoader
 from mining.items import Litigation
 from mining.pipelines import try_parsing_date
+
 
 class LitigationsDetailSpider(scrapy.Spider):
     name = "detail"
@@ -18,6 +20,10 @@ class LitigationsDetailSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse_master)
 
     def parse_master(self, response):
+
+        response = response.replace(encoding='iso-8859-1')
+        response = response.replace(encoding='utf-8')
+
         codes = response.xpath('//tr[count(@id) = 0]/td[1]/a[contains(.//text(), "LR")]/text()').extract()
         date_as_string = response.xpath('//tr[count(@id) = 0]/td[2]/text()')[0].extract()
         actual_date = try_parsing_date(date_as_string)
@@ -31,7 +37,10 @@ class LitigationsDetailSpider(scrapy.Spider):
 
         rels, dates, resps = item_loader.load_item().values()
 
-        for i in range(len(rels)):
+        # WATCH OUT
+        # INTEGER DIVISION
+
+        for i in range(int(len(rels))):
             code = rels[i].lower()
             if year >= 2006:
                 item = Litigation()
@@ -68,8 +77,7 @@ class LitigationsDetailSpider(scrapy.Spider):
 
         item_loader = ItemLoader(item=Litigation(), response=response)
 
-        item_loader.add_xpath('title', '//h1/text()')
-        item_loader.add_xpath('subtitle', '//h2[2]')
+        item_loader.add_xpath('titles', '//h1/text()')
         item_loader.add_xpath('references_names', '//div[@class="grid_7 alpha"]/p/a/text()')
         item_loader.add_xpath('references_urls', '//div[@class="grid_7 alpha"]/p/a/@href')
         item_loader.add_xpath('references_sidebar_names', '//div[@class="grid_3 omega"]/ul/li/a/text()')
@@ -79,5 +87,4 @@ class LitigationsDetailSpider(scrapy.Spider):
 
         item_details = item_loader.load_item()
         item.update(item_details)
-
         return item
