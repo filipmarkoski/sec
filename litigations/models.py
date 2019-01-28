@@ -18,9 +18,14 @@ class Litigation(models.Model):
 class Reference(models.Model):
     litigation = models.ForeignKey(Litigation, on_delete=models.SET_NULL, blank=True, null=True)
     reference = models.CharField(max_length=2000)
-    reference_text = models.CharField(max_length=256)
+    reference_text = models.CharField(max_length=2000)
+
+
+def is_positive(value):
+    return 0 < value < 7
 
 
 class Title(models.Model):
     litigation = models.ForeignKey(Litigation, on_delete=models.SET_NULL, blank=True, null=True)
     title_text = models.CharField(max_length=1024, null=True, blank=True)
+    priority = models.IntegerField(default=6, validators=[is_positive])  # h1 h2 h3

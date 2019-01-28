@@ -17,7 +17,10 @@ class MiningItem(scrapy.Item):
 
 
 def relative_to_absolute_url(value):
-    return "https://www.sec.gov/{0}".format(value)
+    if value[0] == '/':
+        return "https://www.sec.gov{0}".format(value)
+    else:
+        return value
 
 
 def filter_respondents(value):
@@ -42,18 +45,26 @@ class Litigation(scrapy.Item):
     respondents = scrapy.Field(
         input_processor=MapCompose(remove_tags, filter_respondents)
     )
-    title = scrapy.Field(
-        # input_processor=
-    )
-    subtitle = scrapy.Field(
-        input_processor=MapCompose(remove_tags),
-        output_processor=Join('\n')
-    )
     content = scrapy.Field(
-        input_processor=Join('\n')
+        input_processor=MapCompose(remove_tags),
+        output_processor=Join("\n")
     )
+
+    h1s = scrapy.Field(
+        input_processor=MapCompose(remove_tags)
+    )
+    h2s = scrapy.Field(
+        input_processor=MapCompose(remove_tags)
+    )
+    h3s = scrapy.Field(
+        input_processor=MapCompose(remove_tags)
+    )
+    h4s = scrapy.Field(
+        input_processor=MapCompose(remove_tags)
+    )
+
     references_names = scrapy.Field()
-    references_urls = scrapy.Field()
+    references_urls = scrapy.Field(input_processor=MapCompose(relative_to_absolute_url))
     references_sidebar_names = scrapy.Field()
     references_sidebar_urls = scrapy.Field(input_processor=MapCompose(relative_to_absolute_url))
 
